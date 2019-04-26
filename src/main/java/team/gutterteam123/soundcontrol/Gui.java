@@ -34,7 +34,6 @@ public class Gui extends Frame {
     TextField textFieldOutput = new TextField();
     TextField textFieldChannel = new TextField();
     Button submitButton = new Button();
-    SoundControl soundControl = new SoundControl();
     Panel panel = new Panel();
     Frame frame = new Frame();
     JSlider slider = new JSlider();
@@ -72,9 +71,7 @@ public class Gui extends Frame {
         textFieldInput.setPreferredSize(dimension);
         panel.setPreferredSize(new Dimension(width,height));
         PopupPanel.setVisible(true);
-
         popupFrame.add(PopupPanel);
-
         popupFrame.pack();
 
         File imageFile= new File("data/Icon.jpg");
@@ -101,7 +98,7 @@ public class Gui extends Frame {
             JButton box = movableInputBox(new Dimension(120,100), input.name);
             panel.add(box);
             input.rectangle = box.getBounds();
-            frame.add(panel);
+            frame.repaint();
         });
         addConnectionButton.addActionListener(e -> {
 
@@ -154,7 +151,7 @@ public class Gui extends Frame {
             public void mouseDragged(MouseEvent mouseEvent) {
                 int deltaX = mouseEvent.getXOnScreen() - screenX;
                 int deltaY = mouseEvent.getYOnScreen() - screenY;
-                button.setLocation(boxX + deltaX,boxY+deltaY);
+                button.setLocation(boxX + deltaX,boxY + deltaY);
             }
 
             @Override
