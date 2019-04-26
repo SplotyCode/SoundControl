@@ -19,18 +19,31 @@ public class SoundUpdater extends Thread {
             }
             /* Manipulate convert back and send to output */
             for (VirtualOutput output : Controller.getInstance().getActiveOutputs()) {
+                int writeSize = 0;
                 for (int i = 0; i < Controller.SAMPLE_BUFFER_SIZE; i++) {
+                    int rawPosition = (i + 1) * Controller.FRAME_SIZE;
                     float rawValue = 0;
+                    int inputs = 0;
                     for (Channel channel : output.getChannels()) {
                         for (VirtualInput input : channel.getInputs()) {
-                            rawValue += ((float) input.getSampleBuffer()[i]) * channel.getVolume();
+                            if (input.getLastReadSize() >= rawPosition) {
+                                rawValue += ((float) input.getSampleBuffer()[i]) * channel.getVolume();
+                                inputs++;
+                                writeSize = rawPosition;
+                            } else {
+                                System.out.println(input.name() + " is corrupt");
+                            }
                         }
+                    }
+                    if (output.isFairSplit()) {
+                        rawValue /= inputs;
                     }
                     short value = (short) (rawValue * output.getVolume());
                     output.getBuffer()[i * Controller.FRAME_SIZE] = (byte) value;
                     output.getBuffer()[i * Controller.FRAME_SIZE + 1] = (byte) (value >> 8);
                 }
-                output.flushBuffer();
+                System.out.println(writeSize + " " + Controller.BUFFER_SIZE);
+                output.flushBuffer(writeSize);
             }
         }
     }

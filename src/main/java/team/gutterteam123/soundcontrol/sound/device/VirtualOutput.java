@@ -26,13 +26,14 @@ public class VirtualOutput extends VirtualDevice<SourceDataLine> {
     private transient ArrayList<Channel> channels = new ArrayList<>();
 
     @Setter private float volume = 1;
+    @Getter private boolean fairSplit;
 
     public VirtualOutput(String name, String mixerName) {
         super(name, mixerName);
     }
 
-    public void flushBuffer() {
-        line.write(buffer, 0, buffer.length);
+    public void flushBuffer(int bytesRead) {
+        line.write(buffer, 0, bytesRead);
     }
 
     @Override

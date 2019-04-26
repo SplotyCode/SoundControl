@@ -20,7 +20,7 @@ public class SoundControl extends Application {
     @Getter private Controller controller = new Controller();
 
     public static void main(String[] args) throws Exception {
-        //new SoundControl().start(null);
+        new SoundControl().start(null);
         for (Mixer.Info info : AudioSystem.getMixerInfo()) {
             Mixer m = AudioSystem.getMixer(info);
             if (!info.getName().toLowerCase().contains("default")) continue;
