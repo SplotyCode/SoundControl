@@ -13,20 +13,27 @@ public class Controller {
 
     @Getter @Setter private static Controller instance = new Controller();
 
-    public static final int BUFFER_SIZE = 1_000;
 
-    public static final DataLine.Info INPUT_INFO = new DataLine.Info(TargetDataLine.class, Controller.FORMAT);
-    public static final DataLine.Info OUTPUT_INFO = new DataLine.Info(SourceDataLine.class, Controller.FORMAT);
+    public static final int TOTAL_FRAME_SIZE = 4; /* bytes/frame | frame size */
+    public static final int CHANNEL = 2;
+    public static final int FRAME_SIZE = TOTAL_FRAME_SIZE / CHANNEL;
+
+    public static final int BUFFER_SIZE = 1024 * 16; //17640
+    public static final int SAMPLE_BUFFER_SIZE = BUFFER_SIZE / FRAME_SIZE;
 
     public static final AudioFormat FORMAT = new AudioFormat(
             AudioFormat.Encoding.PCM_SIGNED,
             44100, /* sample rate */
             16, /* bit | sample size */
-            2, /* stereo | channels */
-            4, /* 4 bytes/frame | frame size */
+            CHANNEL, /* stereo | channels */
+            TOTAL_FRAME_SIZE, /* bytes/frame | frame size */
             44100, /* frames per second | frame rate */
             false /* little-endian */
     );
+
+
+    public static final DataLine.Info INPUT_INFO = new DataLine.Info(TargetDataLine.class, Controller.FORMAT);
+    public static final DataLine.Info OUTPUT_INFO = new DataLine.Info(SourceDataLine.class, Controller.FORMAT);
 
     private SoundUpdater updater = new SoundUpdater();
 
@@ -39,7 +46,20 @@ public class Controller {
 
     public void init() {
         updateMixers();
-        for (Channel channel : Channel.FILE_SYSTEM.getEntries()) {
+        Channel channel = new Channel("test");
+        VirtualInput input = new VirtualInput("input", "default [default]");
+        VirtualOutput output = new VirtualOutput("output", "default [default]");
+        channel.setVolume(1);
+        output.setVolume(1);
+        output.getChannels().add(channel);
+        channel.getOutputs().add(output);
+        channel.getInputs().add(input);
+        activeChannels.add(channel);
+        activeOutputs.add(output);
+        activeInputs.add(input);
+        System.out.println(input.openLine());
+        System.out.println(output.openLine());
+        /*for (Channel channel : Channel.FILE_SYSTEM.getEntries()) {
             for (String rawInput : channel.getInputNames()) {
                 VirtualInput input = VirtualInput.FILE_SYSTEM.getEntry(rawInput);
                 if (input.openLine()) {
@@ -55,7 +75,7 @@ public class Controller {
                     activeOutputs.add(output);
                 }
             }
-        }
+        }*/
     }
 
     public void startSync() {

@@ -1,6 +1,7 @@
 package team.gutterteam123.soundcontrol.sound;
 
 import lombok.Setter;
+import team.gutterteam123.soundcontrol.SoundControl;
 import team.gutterteam123.soundcontrol.sound.device.VirtualInput;
 import team.gutterteam123.soundcontrol.sound.device.VirtualOutput;
 
@@ -14,30 +15,20 @@ public class SoundUpdater extends Thread {
             /* Get new data from inputs and convert them */
             for (VirtualInput input : Controller.getInstance().getActiveInputs()) {
                 input.updateBuffer();
-                for (int i = 0; i < Controller.BUFFER_SIZE; i+=2) {
-                    // convert byte pair to int
-                    short buf1 = (short) ((input.getBuffer()[i+1]) << 8);
-                    short buf2 = (short) (input.getBuffer()[i] & 0xff);
-
-                    input.getShortBuffer()[i] = (short) (buf1 | buf2);
-                }
+                input.generateSamples();
             }
             /* Manipulate convert back and send to output */
             for (VirtualOutput output : Controller.getInstance().getActiveOutputs()) {
-                for (int i = 0; i < Controller.BUFFER_SIZE / 2; i++) {
-                    int value = 0;
-                    int sources = 0;
+                for (int i = 0; i < Controller.SAMPLE_BUFFER_SIZE; i++) {
+                    float rawValue = 0;
                     for (Channel channel : output.getChannels()) {
                         for (VirtualInput input : channel.getInputs()) {
-                            if (input.getLastReadSize() >= i) {
-                                value += input.getShortBuffer()[i] * channel.getVolume() * output.getVolume();
-                                sources++;
-                            }
+                            rawValue += ((float) input.getSampleBuffer()[i]) * channel.getVolume();
                         }
                     }
-                    value = value / sources;
-                    output.getBuffer()[i * 2] = (byte) value;
-                    output.getBuffer()[i * 2 + 1] = (byte) (value >> 8);
+                    short value = (short) (rawValue * output.getVolume());
+                    output.getBuffer()[i * Controller.FRAME_SIZE] = (byte) value;
+                    output.getBuffer()[i * Controller.FRAME_SIZE + 1] = (byte) (value >> 8);
                 }
                 output.flushBuffer();
             }
