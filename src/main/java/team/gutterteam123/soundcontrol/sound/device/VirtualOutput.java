@@ -5,29 +5,41 @@ import io.github.splotycode.mosaik.domparsing.annotation.parsing.SerialisedEntry
 import io.github.splotycode.mosaik.runtime.LinkBase;
 import io.github.splotycode.mosaik.runtime.Links;
 import lombok.Getter;
+import lombok.Setter;
 import team.gutterteam123.soundcontrol.sound.Channel;
 import team.gutterteam123.soundcontrol.sound.Controller;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
+import java.util.ArrayList;
 import java.util.List;
 
-public class VirtualOutput extends VirtualDevice {
+@Getter
+public class VirtualOutput extends VirtualDevice<SourceDataLine> {
 
-    public static final FileSystem<VirtualOutput> FILE_SYSTEM = LinkBase.getInstance().getLink(Links.PARSING_FILEPROVIDER).provide("output", new SerialisedEntryParser());
+    public static transient final FileSystem<VirtualOutput> FILE_SYSTEM = LinkBase.getInstance().getLink(Links.PARSING_FILEPROVIDER).provide("output", new SerialisedEntryParser());
 
-    @Getter private final byte[] buffer = new byte[Controller.BUFFER_SIZE];
+    private transient final byte[] buffer = new byte[Controller.BUFFER_SIZE];
 
-    @Getter private float volume;
+    private transient ArrayList<Channel> channels = new ArrayList<>();
 
-    public List<Channel> getChannels() {
-        return null;
-    }
+    @Setter private float volume;
+
 
     public void flushBuffer() {
-
+        line.write(buffer, 0, buffer.length);
     }
 
     @Override
-    public String name() {
-        return null;
+    public boolean openLine() {
+        if (!super.openLine()) return false;
+        try {
+            line = (SourceDataLine) mixer.getLine(Controller.OUTPUT_INFO);
+            line.open(Controller.FORMAT);
+            line.start();
+        } catch (LineUnavailableException e) {
+            return false;
+        }
+        return true;
     }
 }

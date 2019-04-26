@@ -95,13 +95,16 @@ public class SoundControl extends Application {
             Mixer m = AudioSystem.getMixer(info);
             DataLine.Info lineInfo = new DataLine.Info(TargetDataLine.class, Controller.FORMAT);
             if (m.isLineSupported(lineInfo)) {
-                System.out.println(info.getName() + " (" + info.getDescription() + ") By " + info.getVendor() + " v" + info.getVersion());
+                test((TargetDataLine) m.getLine(lineInfo));
             }
         }
     }
 
     public void start(BootContext bootContext) throws Exception {
         Controller.setInstance(controller);
+        getLocalShutdownManager().addFirstShutdownTask(controller::stop);
+        controller.init();
+        controller.startSync();
     }
 
     public String getName() {

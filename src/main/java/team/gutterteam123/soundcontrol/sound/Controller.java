@@ -2,10 +2,13 @@ package team.gutterteam123.soundcontrol.sound;
 
 import lombok.Getter;
 import lombok.Setter;
+import team.gutterteam123.soundcontrol.sound.device.VirtualInput;
+import team.gutterteam123.soundcontrol.sound.device.VirtualOutput;
 
 import javax.sound.sampled.*;
 import java.util.ArrayList;
 
+@Getter
 public class Controller {
 
     @Getter @Setter private static Controller instance = new Controller();
@@ -25,26 +28,82 @@ public class Controller {
             false /* little-endian */
     );
 
-    public ArrayList<String> getInputMixer() {
-        ArrayList<String> mixers = new ArrayList<>();
-        for (Mixer.Info info : AudioSystem.getMixerInfo()) {
-            if (AudioSystem.getMixer(info).isLineSupported(INPUT_INFO)) {
-                mixers.add(info.getName());
+    private SoundUpdater updater = new SoundUpdater();
+
+    private ArrayList<Channel> activeChannels = new ArrayList<>();
+    private ArrayList<VirtualInput> activeInputs = new ArrayList<>();
+    private ArrayList<VirtualOutput> activeOutputs = new ArrayList<>();
+
+    private ArrayList<String> outputMixers = new ArrayList<>();
+    private ArrayList<String> inputMixers = new ArrayList<>();
+
+    public void init() {
+        updateMixers();
+        for (Channel channel : Channel.FILE_SYSTEM.getEntries()) {
+            for (String rawInput : channel.getInputNames()) {
+                VirtualInput input = VirtualInput.FILE_SYSTEM.getEntry(rawInput);
+                if (input.openLine()) {
+                    channel.getInputs().add(input);
+                    activeInputs.add(input);
+                }
+            }
+            for (String rawOutput : channel.getOutputNames()) {
+                VirtualOutput output = VirtualOutput.FILE_SYSTEM.getEntry(rawOutput);
+                if (output.openLine()) {
+                    channel.getOutputs().add(output);
+                    output.getChannels().add(channel);
+                    activeOutputs.add(output);
+                }
             }
         }
-        return mixers;
     }
 
-    public ArrayList<String> getOutputMixer() {
-        ArrayList<String> mixers = new ArrayList<>();
+    public void startSync() {
+        updater.start();
+    }
+
+    public void stop() {
+        stopSync();
+        for (VirtualInput input : activeInputs) {
+            input.closeLine();
+        }
+        for (VirtualOutput output : activeOutputs) {
+            output.closeLine();
+        }
+    }
+
+    public void stopSync() {
+        updater.setRunning(false);
+        try {
+            updater.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Mixer getMixerByName(String name) {
+        name = name.trim();
+        for (Mixer.Info info : AudioSystem.getMixerInfo()) {
+            if (info.getName().trim().equalsIgnoreCase(name)) {
+                return AudioSystem.getMixer(info);
+            }
+        }
+        return null;
+    }
+
+    private void updateMixers() {
+        outputMixers.clear();
+        inputMixers.clear();
         for (Mixer.Info info : AudioSystem.getMixerInfo()) {
             if (AudioSystem.getMixer(info).isLineSupported(OUTPUT_INFO)) {
-                mixers.add(info.getName());
+                outputMixers.add(info.getName());
             }
         }
-        return mixers;
+        for (Mixer.Info info : AudioSystem.getMixerInfo()) {
+            if (AudioSystem.getMixer(info).isLineSupported(INPUT_INFO)) {
+                inputMixers.add(info.getName());
+            }
+        }
     }
-
-    @Getter private ArrayList<Channel> channels = new ArrayList<>();
 
 }
