@@ -46,7 +46,7 @@ public class SoundControl extends Application {
                         }
                         System.out.println(max + " " + min);
                     }
-                    adjustVolume(data, 2, i % 100 == 0);
+                    //adjustVolume(data, Short.MAX_VALUE, i % 100 == 0);
                     sourceLine.write(data, 0, readBytes);
                     i++;
                 }
@@ -91,6 +91,8 @@ public class SoundControl extends Application {
     }
 
     public static void main(String[] args) throws LineUnavailableException {
+        Gui gui = new Gui();
+        gui.buildGui(1000,1000);
         for (Mixer.Info info : AudioSystem.getMixerInfo()) {
             Mixer m = AudioSystem.getMixer(info);
             DataLine.Info lineInfo = new DataLine.Info(TargetDataLine.class, Controller.FORMAT);
