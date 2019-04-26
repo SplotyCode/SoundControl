@@ -47,7 +47,7 @@ public class SoundControl extends Application {
                         System.out.println(max + " " + min);
                     }
                     //adjustVolume(data, Short.MAX_VALUE, i % 100 == 0);
-                    sourceLine.write(data, 0, readBytes);
+                    //sourceLine.write(data, 0, readBytes);
                     i++;
                 }
             });

@@ -1,32 +1,64 @@
 package team.gutterteam123.soundcontrol;
 
+
+import team.gutterteam123.soundcontrol.sound.Channel;
+import team.gutterteam123.soundcontrol.sound.device.VirtualInput;
+import team.gutterteam123.soundcontrol.sound.device.VirtualOutput;
+
 import javax.imageio.ImageIO;
-import javax.sound.sampled.Line;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Gui extends Frame {
+    Point[] points = new Point[2];
     private volatile int screenX = 0;
     private volatile int screenY = 0;
     private volatile int boxX = 0;
     private volatile int boxY = 0;
+    final Frame popupFrame = new Frame();
+    Panel PopupPanel = new Panel();
+    TextField textFieldInput = new TextField();
+    TextField textFieldOutput = new TextField();
+    TextField textFieldChannel = new TextField();
+    Button submitButton = new Button();
     SoundControl soundControl = new SoundControl();
+    Panel panel = new Panel();
     Frame frame = new Frame();
     JSlider slider = new JSlider();
+    Map<VirtualInput, Channel> virtualInputChannelMap = new HashMap<>();
+    Map<VirtualOutput, Channel> virtualOutputChannelMap = new HashMap<>();
 
 
 
     public void buildGui(int width, int height){
+        popupFrame.setLayout(new BoxLayout(popupFrame,BoxLayout.Y_AXIS));
+        Font font = new Font("MyFont",Font.BOLD,36);
+        textFieldInput.setFont(font);
+        textFieldChannel.setFont(font);
+        PopupPanel.add(textFieldInput);
+        submitButton.setLabel("Submit");
+        Dimension dimension = new Dimension();
+        dimension.height = 36;
+        dimension.width = 124*2;
+        popupFrame.setLayout(new BoxLayout(popupFrame, BoxLayout.LINE_AXIS));
+        PopupPanel.add(submitButton);
+        textFieldChannel.setPreferredSize(dimension);
+        textFieldInput.setPreferredSize(dimension);
+        panel.setPreferredSize(new Dimension(width,height));
+        PopupPanel.setVisible(true);
 
-        frame.setSize(width, height);
+        popupFrame.add(PopupPanel);
+
+        popupFrame.pack();
+
         File imageFile= new File("data/Icon.jpg");
         try {
             Image image = ImageIO.read(imageFile);
@@ -34,7 +66,9 @@ public class Gui extends Frame {
         } catch (IOException e) {
             System.err.println("Image file not found: " + e);
         }
-        frame.add(moveableBox());
+        frame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        panel.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
+        panel.add(movableInputBox(40,40, new Dimension(100,100)));
         slider.addChangeListener(changeEvent ->
 
                 {
@@ -42,15 +76,19 @@ public class Gui extends Frame {
         }
 
         );
-        frame.setTitle("Sound Control");
+        popupFrame.setSize(700,500);
+        popupFrame.setVisible(true);
+        frame.setTitle("Manage Inputs and Outputs");
+        panel.setVisible(true);
+        frame.add(panel);
         frame.setVisible(true);
     }
-    public JButton moveableBox(){
+    public JButton movableInputBox(int startX, int startY, Dimension d){
         JButton button = new JButton();
+        button.setLocation(startX, startY);
+        button.setBackground(Color.ORANGE);
         button.setBorder(new LineBorder(Color.BLACK,4));
-        button.setBackground(Color.gray);
-        button.setBounds(0,0,100,100);
-        button.setOpaque(false);
+        button.setPreferredSize(d);
         button.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
@@ -94,5 +132,35 @@ public class Gui extends Frame {
             }
         });
     return  button;
+    } public void drawPoint(Point[] checkingInputs, Point[] checkingChannels, Point[] checkingOutputs){
+        panel.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent mouseEvent) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent mouseEvent) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent mouseEvent) {
+
+            }
+        });
+
+
     }
+
 }
