@@ -20,11 +20,13 @@ public class Gui extends Frame {
     Rectangle[] rectanglesInput = new Rectangle[1048];
     Rectangle[] rectanglesChannel = new Rectangle[1048];
     Rectangle[] rectanglesOutput = new Rectangle[1048];
-    private volatile int screenX = 0;
-    private volatile int screenY = 0;
-    private volatile int boxX = 0;
-    private volatile int boxY = 0;
+    private int screenX = 0;
+    private int screenY = 0;
+    private int boxX = 0;
+    private int boxY = 0;
     final Frame popupFrame = new Frame();
+    int deltaX;
+    int deltaY;
     Button addConnectionButton = new Button();
     Button addInputButton = new Button();
     Button addChannelButton = new Button();
@@ -34,7 +36,6 @@ public class Gui extends Frame {
     TextField textFieldOutput = new TextField();
     TextField textFieldChannel = new TextField();
     Button submitButton = new Button();
-    SoundControl soundControl = new SoundControl();
     Panel panel = new Panel();
     Frame frame = new Frame();
     JSlider slider = new JSlider();
@@ -72,9 +73,7 @@ public class Gui extends Frame {
         textFieldInput.setPreferredSize(dimension);
         panel.setPreferredSize(new Dimension(width,height));
         PopupPanel.setVisible(true);
-
         popupFrame.add(PopupPanel);
-
         popupFrame.pack();
 
         File imageFile= new File("data/Icon.jpg");
@@ -95,13 +94,11 @@ public class Gui extends Frame {
 
         );
         addInputButton.addActionListener(e -> {
-            Input input = new Input();
-
-            input.name = textFieldInput.getText();
-            JButton box = movableInputBox(new Dimension(120,100), input.name);
+            String inputText = textFieldInput.getText();
+            Box box = movableInputBox(new Dimension(120,100), inputText);
             panel.add(box);
-            input.rectangle = box.getBounds();
-            frame.add(panel);
+            Rectangle InputRectangle = box.getBounds();
+            frame.repaint();
         });
         addConnectionButton.addActionListener(e -> {
 
@@ -113,11 +110,12 @@ public class Gui extends Frame {
         frame.add(panel);
         frame.setVisible(true);
     }
-    public JButton movableInputBox(Dimension d, String text){
-        JButton button = new JButton();
+    public Box movableInputBox(Dimension d, String text){
+        Box button = new Box();
         button.setText(text);
         button.setEnabled(false);
-        button.setBackground(Color.ORANGE);
+        button.setColor(Color.PINK);
+        button.setTextColor(Color.gray);
         button.setBorder(new LineBorder(Color.BLACK,4));
         button.setPreferredSize(d);
         button.addMouseListener(new MouseListener() {
@@ -152,9 +150,9 @@ public class Gui extends Frame {
         button.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent mouseEvent) {
-                int deltaX = mouseEvent.getXOnScreen() - screenX;
-                int deltaY = mouseEvent.getYOnScreen() - screenY;
-                button.setLocation(boxX + deltaX,boxY+deltaY);
+                deltaX = mouseEvent.getXOnScreen() - screenX;
+                deltaY = mouseEvent.getYOnScreen() - screenY;
+                button.setLocation(boxX + deltaX,boxY + deltaY);
             }
 
             @Override
@@ -177,7 +175,7 @@ public class Gui extends Frame {
                         for(int i = 0; i< checkingInputs.length ; i++) {
                             if (checkingInputs[i].contains(points[e])) {
                                 inputNumberThatContains = i;
-                                notNedded = e;
+                                notNeeded = e;
                                 Input = true;
                                 break;
                             }
@@ -197,11 +195,11 @@ public class Gui extends Frame {
                     }
                     Input = false;
 
-                    if(notNedded == 1){
-                        nedded = 0;
+                    if(notNeeded == 1){
+                        needed = 0;
                     }
                     for(int r = 0; r < checkingChannels.length; r++){
-                        if(checkingChannels[r].contains(points[nedded])){
+                        if(checkingChannels[r].contains(points[needed])){
                             channelNumberThatContains = r;
                         }
 
