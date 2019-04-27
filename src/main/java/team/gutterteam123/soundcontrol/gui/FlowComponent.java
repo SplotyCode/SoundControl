@@ -33,7 +33,13 @@ public class FlowComponent extends JComponent {
             @Override
             public void mouseDragged(MouseEvent event) {
                 if (drag != null) {
-                    drag.getPosition().setLocation(event.getPoint());
+                    Point old = drag.getPosition().getLocation();
+                    Point point = new Point(event.getX() - drag.getPosition().width / 2,
+                                            event.getY() - drag.getPosition().height / 2);
+                    drag.getPosition().setLocation(point);
+                    if (!getBounds(null).contains(old)) {
+                        point.setLocation(old);
+                    }
                 }
             }
         });
