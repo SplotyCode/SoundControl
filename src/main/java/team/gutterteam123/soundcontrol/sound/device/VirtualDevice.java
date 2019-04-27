@@ -1,20 +1,26 @@
 package team.gutterteam123.soundcontrol.sound.device;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import team.gutterteam123.soundcontrol.sound.Controller;
 
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.Mixer;
+import java.awt.*;
 import java.io.Serializable;
 
 @NoArgsConstructor
-public abstract class VirtualDevice<L extends DataLine> implements Serializable {
+@EqualsAndHashCode
+public abstract class VirtualDevice<L extends DataLine> implements Serializable, Flowable {
 
     protected String mixerName;
     protected String name;
     protected transient L line;
     protected transient Mixer mixer;
+
+    @Getter @Setter private Dimension position = new Dimension();
 
     public VirtualDevice(String name, String mixerName) {
         this.name = name;

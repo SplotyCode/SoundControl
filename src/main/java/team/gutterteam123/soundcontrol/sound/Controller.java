@@ -2,6 +2,7 @@ package team.gutterteam123.soundcontrol.sound;
 
 import lombok.Getter;
 import lombok.Setter;
+import team.gutterteam123.soundcontrol.sound.device.VirtualDevice;
 import team.gutterteam123.soundcontrol.sound.device.VirtualInput;
 import team.gutterteam123.soundcontrol.sound.device.VirtualOutput;
 
@@ -44,9 +45,19 @@ public class Controller {
     private ArrayList<String> outputMixers = new ArrayList<>();
     private ArrayList<String> inputMixers = new ArrayList<>();
 
+    public void hardReload() {
+        stop();
+
+        activeChannels.clear();
+        activeInputs.clear();
+        activeOutputs.clear();
+
+        init();
+    }
+
     public void init() {
         updateMixers();
-        Channel channel = new Channel("test");
+        /*Channel channel = new Channel("test");
         VirtualInput input = new VirtualInput("input", "default [default]");
         VirtualOutput output = new VirtualOutput("output", "default [default]");
         channel.setVolume(1);
@@ -58,24 +69,25 @@ public class Controller {
         activeOutputs.add(output);
         activeInputs.add(input);
         System.out.println(input.openLine());
-        System.out.println(output.openLine());
-        /*for (Channel channel : Channel.FILE_SYSTEM.getEntries()) {
+        System.out.println(output.openLine());*/
+        for (Channel channel : Channel.FILE_SYSTEM.getEntries()) {
+            activeChannels.add(channel);
             for (String rawInput : channel.getInputNames()) {
                 VirtualInput input = VirtualInput.FILE_SYSTEM.getEntry(rawInput);
+                channel.getInputs().add(input);
                 if (input.openLine()) {
-                    channel.getInputs().add(input);
                     activeInputs.add(input);
                 }
             }
             for (String rawOutput : channel.getOutputNames()) {
                 VirtualOutput output = VirtualOutput.FILE_SYSTEM.getEntry(rawOutput);
+                channel.getOutputs().add(output);
                 if (output.openLine()) {
-                    channel.getOutputs().add(output);
                     output.getChannels().add(channel);
                     activeOutputs.add(output);
                 }
             }
-        }*/
+        }
     }
 
     public void startSync() {

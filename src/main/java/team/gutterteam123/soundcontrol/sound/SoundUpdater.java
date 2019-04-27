@@ -1,9 +1,12 @@
 package team.gutterteam123.soundcontrol.sound;
 
 import lombok.Setter;
+import team.gutterteam123.soundcontrol.Gui;
 import team.gutterteam123.soundcontrol.SoundControl;
 import team.gutterteam123.soundcontrol.sound.device.VirtualInput;
 import team.gutterteam123.soundcontrol.sound.device.VirtualOutput;
+
+import javax.swing.*;
 
 public class SoundUpdater extends Thread {
 
@@ -42,7 +45,6 @@ public class SoundUpdater extends Thread {
                     output.getBuffer()[i * Controller.FRAME_SIZE] = (byte) value;
                     output.getBuffer()[i * Controller.FRAME_SIZE + 1] = (byte) (value >> 8);
                 }
-                System.out.println(writeSize + " " + Controller.BUFFER_SIZE);
                 output.flushBuffer(writeSize);
             }
         }

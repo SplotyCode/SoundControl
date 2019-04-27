@@ -18,12 +18,16 @@ public class SoundControl extends Application {
     }
 
     @Getter private Controller controller = new Controller();
+    @Getter private Gui gui = new Gui();
 
     public static void main(String[] args) throws Exception {
         new SoundControl().start(null);
+
+    }
+
+    private void printFormats() {
         for (Mixer.Info info : AudioSystem.getMixerInfo()) {
             Mixer m = AudioSystem.getMixer(info);
-            if (!info.getName().toLowerCase().contains("default")) continue;
             for (Line.Info a : m.getTargetLineInfo()) {
                 if (a instanceof DataLine.Info) {
                     System.out.println(info.getName());
@@ -38,10 +42,13 @@ public class SoundControl extends Application {
     }
 
     public void start(BootContext bootContext) throws Exception {
+        printFormats();
         Controller.setInstance(controller);
         getLocalShutdownManager().addFirstShutdownTask(controller::stop);
         controller.init();
         controller.startSync();
+
+        gui.buildGui(1000,1000);
     }
 
     public String getName() {

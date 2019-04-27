@@ -9,8 +9,5 @@
         <module name="SoundControl" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="SoundControl" target="8" />
-    </bytecodeTargetLevel>
   </component>
 </project>

@@ -1,5 +1,10 @@
 package team.gutterteam123.soundcontrol.sound.device;
 
+import io.github.splotycode.mosaik.domparsing.annotation.FileSystem;
+import io.github.splotycode.mosaik.domparsing.annotation.parsing.SerialisedEntryParser;
+import io.github.splotycode.mosaik.runtime.LinkBase;
+import io.github.splotycode.mosaik.runtime.Links;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import team.gutterteam123.soundcontrol.sound.Controller;
@@ -8,9 +13,10 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.TargetDataLine;
 
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class VirtualInput extends VirtualDevice<TargetDataLine> {
 
-   // public static final FileSystem<VirtualInput> FILE_SYSTEM = LinkBase.getInstance().getLink(Links.PARSING_FILEPROVIDER).provide("inputs", new SerialisedEntryParser());
+    public static final FileSystem<VirtualInput> FILE_SYSTEM = LinkBase.getInstance().getLink(Links.PARSING_FILEPROVIDER).provide("inputs", new SerialisedEntryParser());
 
     @Getter private final transient byte[] buffer = new byte[Controller.BUFFER_SIZE];
     @Getter private final transient short[] sampleBuffer = new short[Controller.SAMPLE_BUFFER_SIZE];

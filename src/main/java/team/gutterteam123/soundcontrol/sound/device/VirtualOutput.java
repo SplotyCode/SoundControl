@@ -4,6 +4,7 @@ import io.github.splotycode.mosaik.domparsing.annotation.FileSystem;
 import io.github.splotycode.mosaik.domparsing.annotation.parsing.SerialisedEntryParser;
 import io.github.splotycode.mosaik.runtime.LinkBase;
 import io.github.splotycode.mosaik.runtime.Links;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,13 +14,13 @@ import team.gutterteam123.soundcontrol.sound.Controller;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class VirtualOutput extends VirtualDevice<SourceDataLine> {
 
-    //public static transient final FileSystem<VirtualOutput> FILE_SYSTEM = LinkBase.getInstance().getLink(Links.PARSING_FILEPROVIDER).provide("output", new SerialisedEntryParser());
+    public static transient final FileSystem<VirtualOutput> FILE_SYSTEM = LinkBase.getInstance().getLink(Links.PARSING_FILEPROVIDER).provide("output", new SerialisedEntryParser());
 
     private transient final byte[] buffer = new byte[Controller.BUFFER_SIZE];
 
