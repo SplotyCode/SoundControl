@@ -4,12 +4,12 @@ import io.github.splotycode.mosaik.runtime.LinkBase;
 import io.github.splotycode.mosaik.runtime.application.Application;
 import io.github.splotycode.mosaik.runtime.startup.BootContext;
 import lombok.Getter;
+import team.gutterteam123.soundcontrol.gui.Gui;
 import team.gutterteam123.soundcontrol.sound.Channel;
 import team.gutterteam123.soundcontrol.sound.Controller;
 import team.gutterteam123.soundcontrol.sound.device.VirtualInput;
 
 import javax.sound.sampled.*;
-import java.util.Arrays;
 
 public class SoundControl extends Application {
 

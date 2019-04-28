@@ -52,7 +52,17 @@ public class FlowComponent extends JComponent {
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
+
         Graphics2D g = (Graphics2D) graphics;
+        g.setColor(Color.PINK);
+        g.fillRect(200, 200, 100, 100);
+
+        /* TEXT */
+        g.setColor(Color.GRAY);
+        g.drawString("name",
+                200 + (100 - g.getFontMetrics().stringWidth("name")) / 2,
+                200 + (100 - g.getFontMetrics().getHeight()) / 2);
+
         for (Flowable flowable : Controller.getInstance().getAllFlowables().values()) {
             int x = flowable.getPosition().x;
             int y = flowable.getPosition().y;

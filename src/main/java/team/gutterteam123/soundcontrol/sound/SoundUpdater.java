@@ -1,12 +1,8 @@
 package team.gutterteam123.soundcontrol.sound;
 
 import lombok.Setter;
-import team.gutterteam123.soundcontrol.Gui;
-import team.gutterteam123.soundcontrol.SoundControl;
 import team.gutterteam123.soundcontrol.sound.device.VirtualInput;
 import team.gutterteam123.soundcontrol.sound.device.VirtualOutput;
-
-import javax.swing.*;
 
 public class SoundUpdater extends Thread {
 
@@ -30,7 +26,7 @@ public class SoundUpdater extends Thread {
                     for (Channel channel : output.getChannels()) {
                         for (VirtualInput input : channel.getInputs()) {
                             if (input.getLastReadSize() >= rawPosition) {
-                                rawValue += ((float) input.getSampleBuffer()[i]) * channel.getVolume();
+                                //rawValue += ((float) input.getSampleBuffer()[i]) * channel.getVolume();
                                 inputs++;
                                 writeSize = rawPosition;
                             } else {
