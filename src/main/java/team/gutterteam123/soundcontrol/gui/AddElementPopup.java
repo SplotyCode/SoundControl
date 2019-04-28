@@ -17,6 +17,7 @@ public class AddElementPopup extends JFrame {
     private JButton button = new JButton("Save");
 
     public AddElementPopup(boolean input) {
+        super("Create " + (input ? "Input" : "Output"));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         mixerBox = new JComboBox<>(input ? Controller.getInstance().getInputMixers().toArray(new String[] {}) :
                                            Controller.getInstance().getOutputMixers().toArray(new String[] {}));
