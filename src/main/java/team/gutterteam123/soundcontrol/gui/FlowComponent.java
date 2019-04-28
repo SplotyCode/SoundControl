@@ -54,14 +54,6 @@ public class FlowComponent extends JComponent {
         super.paintComponent(graphics);
 
         Graphics2D g = (Graphics2D) graphics;
-        g.setColor(Color.PINK);
-        g.fillRect(200, 200, 100, 100);
-
-        /* TEXT */
-        g.setColor(Color.GRAY);
-        g.drawString("name",
-                200 + (100 - g.getFontMetrics().stringWidth("name")) / 2,
-                200 + (100 - g.getFontMetrics().getHeight()) / 2);
 
         for (Flowable flowable : Controller.getInstance().getAllFlowables().values()) {
             int x = flowable.getPosition().x;
@@ -77,7 +69,7 @@ public class FlowComponent extends JComponent {
             g.setColor(Color.GRAY);
             g.drawString(flowable.name(),
                     x + (w - g.getFontMetrics().stringWidth(flowable.name())) / 2,
-                    y + (h - g.getFontMetrics().getHeight()) / 2);
+                    y + ((h - g.getFontMetrics().getHeight()) / 2)  + g.getFontMetrics().getAscent());
 
             /* POINTS */
             if (!(flowable instanceof VirtualOutput)) {

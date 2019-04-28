@@ -72,6 +72,7 @@ public class Gui extends Frame {
 
         popupFrame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setJMenuBar(new SoundMenu());
         popupFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         File imageFile= new File("data" + separator +"Icon.jpg");
         try {
