@@ -2,12 +2,14 @@ package team.gutterteam123.soundcontrol.sound;
 
 import lombok.Getter;
 import lombok.Setter;
+import team.gutterteam123.soundcontrol.sound.device.Flowable;
 import team.gutterteam123.soundcontrol.sound.device.VirtualDevice;
 import team.gutterteam123.soundcontrol.sound.device.VirtualInput;
 import team.gutterteam123.soundcontrol.sound.device.VirtualOutput;
 
 import javax.sound.sampled.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 @Getter
 public class Controller {
@@ -38,6 +40,10 @@ public class Controller {
 
     private SoundUpdater updater = new SoundUpdater();
 
+    private HashMap<String, Flowable> allFlowables = new HashMap<>();
+    private HashMap<String, VirtualInput> allInputs = new HashMap<>();
+    private HashMap<String, VirtualOutput> allOutputs = new HashMap<>();
+
     private ArrayList<Channel> activeChannels = new ArrayList<>();
     private ArrayList<VirtualInput> activeInputs = new ArrayList<>();
     private ArrayList<VirtualOutput> activeOutputs = new ArrayList<>();
@@ -47,6 +53,9 @@ public class Controller {
 
     public void hardReload() {
         stop();
+
+        allInputs.clear();
+        allOutputs.clear();
 
         activeChannels.clear();
         activeInputs.clear();
@@ -70,17 +79,26 @@ public class Controller {
         activeInputs.add(input);
         System.out.println(input.openLine());
         System.out.println(output.openLine());*/
+        for (VirtualInput input : VirtualInput.FILE_SYSTEM.getEntries()) {
+            allInputs.put(input.name(), input);
+            allFlowables.put(input.name(), input);
+        }
+        for (VirtualOutput output : VirtualOutput.FILE_SYSTEM.getEntries()) {
+            allOutputs.put(output.name(), output);
+            allFlowables.put(output.name(), output);
+        }
         for (Channel channel : Channel.FILE_SYSTEM.getEntries()) {
             activeChannels.add(channel);
+            allFlowables.put(channel.name(), channel);
             for (String rawInput : channel.getInputNames()) {
-                VirtualInput input = VirtualInput.FILE_SYSTEM.getEntry(rawInput);
+                VirtualInput input = allInputs.get(rawInput);
                 channel.getInputs().add(input);
                 if (input.openLine()) {
                     activeInputs.add(input);
                 }
             }
             for (String rawOutput : channel.getOutputNames()) {
-                VirtualOutput output = VirtualOutput.FILE_SYSTEM.getEntry(rawOutput);
+                VirtualOutput output = allOutputs.get(rawOutput);
                 channel.getOutputs().add(output);
                 if (output.openLine()) {
                     output.getChannels().add(channel);
@@ -101,6 +119,16 @@ public class Controller {
         }
         for (VirtualOutput output : activeOutputs) {
             output.closeLine();
+        }
+    }
+
+    public void update(Flowable flowable) {
+        if (flowable instanceof VirtualInput) {
+            VirtualInput.FILE_SYSTEM.putEntry(flowable.name(), (VirtualInput) flowable);
+        } else if (flowable instanceof VirtualOutput) {
+            VirtualOutput.FILE_SYSTEM.putEntry(flowable.name(), (VirtualOutput) flowable);
+        } else if (flowable instanceof Channel) {
+            Channel.FILE_SYSTEM.putEntry(flowable.name(), (Channel) flowable);
         }
     }
 

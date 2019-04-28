@@ -1,6 +1,7 @@
 package team.gutterteam123.soundcontrol.gui;
 
 import team.gutterteam123.soundcontrol.sound.Channel;
+import team.gutterteam123.soundcontrol.sound.Controller;
 import team.gutterteam123.soundcontrol.sound.device.Flowable;
 import team.gutterteam123.soundcontrol.sound.device.VirtualInput;
 import team.gutterteam123.soundcontrol.sound.device.VirtualOutput;
@@ -39,6 +40,9 @@ public class FlowComponent extends JComponent {
                     drag.getPosition().setLocation(point);
                     if (!getBounds(null).contains(old)) {
                         point.setLocation(old);
+                    } else {
+                        Controller.getInstance().update(drag);
+                        repaint();
                     }
                 }
             }
@@ -49,7 +53,7 @@ public class FlowComponent extends JComponent {
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         Graphics2D g = (Graphics2D) graphics;
-        for (Flowable flowable : getElements()) {
+        for (Flowable flowable : Controller.getInstance().getAllFlowables().values()) {
             int x = flowable.getPosition().x;
             int y = flowable.getPosition().y;
             int w = flowable.getPosition().width;
@@ -75,18 +79,13 @@ public class FlowComponent extends JComponent {
                 g.drawOval(x, y + h / 2, 2, 2);
             }
         }
-    }
+        for (Channel channel : Controller.getInstance().getActiveChannels()) {
 
-    public ArrayList<Flowable> getElements() {
-        ArrayList<Flowable> box = new ArrayList<>();
-        box.addAll(VirtualInput.FILE_SYSTEM.getEntries());
-        box.addAll(VirtualOutput.FILE_SYSTEM.getEntries());
-        box.addAll(Channel.FILE_SYSTEM.getEntries());
-        return box;
+        }
     }
 
     public Flowable getFlowabl(Point point) {
-        for (Flowable flowable : getElements()) {
+        for (Flowable flowable : Controller.getInstance().getAllFlowables().values()) {
             if (flowable.getPosition().contains(point)) {
                 return flowable;
             }
