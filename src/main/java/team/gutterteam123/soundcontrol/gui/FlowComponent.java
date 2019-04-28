@@ -69,16 +69,16 @@ public class FlowComponent extends JComponent {
             g.setColor(Color.GRAY);
             g.drawString(flowable.name(),
                     x + (w - g.getFontMetrics().stringWidth(flowable.name())) / 2,
-                    y + ((h - g.getFontMetrics().getHeight()) / 2)  + g.getFontMetrics().getAscent());
+                    y + (h - g.getFontMetrics().getHeight()) / 2);
 
             /* POINTS */
             if (!(flowable instanceof VirtualOutput)) {
                 int numRigth = 3; //TODO GET REAL VALUE (+1)
-                g.drawOval(x + w, y + h / 2, 2, 2);
+                g.drawOval(x + w, y + h / 2, 4, 4);
             }
             if (!(flowable instanceof VirtualInput)) {
                 int numLeft = 3; //TODO GET REAL VALUE (+1)
-                g.drawOval(x, y + h / 2, 2, 2);
+                g.drawOval(x, y + h / 2, 4, 4);
             }
         }
         for (Channel channel : Controller.getInstance().getActiveChannels()) {
