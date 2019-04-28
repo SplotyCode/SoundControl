@@ -54,6 +54,8 @@ public class Controller {
     public void hardReload() {
         stop();
 
+        allFlowables.clear();
+
         allInputs.clear();
         allOutputs.clear();
 
