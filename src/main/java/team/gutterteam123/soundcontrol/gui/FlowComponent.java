@@ -54,14 +54,10 @@ public class FlowComponent extends JComponent {
         super.paintComponent(graphics);
 
         Graphics2D g = (Graphics2D) graphics;
-        g.setColor(Color.PINK);
-        g.fillRect(200, 200, 100, 100);
-
-        /* TEXT */
-        g.setColor(Color.GRAY);
-        g.drawString("name",
-                200 + (100 - g.getFontMetrics().stringWidth("name")) / 2,
-                200 + (100 - g.getFontMetrics().getHeight()) / 2);
+        VirtualInput vI = new VirtualInput("name", "mixerName");
+        Rectangle r = new Rectangle(100,100,100,100);
+        vI.setPosition(r);
+        Controller.getInstance().getAllFlowables().put("name", vI);
 
         for (Flowable flowable : Controller.getInstance().getAllFlowables().values()) {
             int x = flowable.getPosition().x;
@@ -82,11 +78,11 @@ public class FlowComponent extends JComponent {
             /* POINTS */
             if (!(flowable instanceof VirtualOutput)) {
                 int numRigth = 3; //TODO GET REAL VALUE (+1)
-                g.drawOval(x + w, y + h / 2, 2, 2);
+                g.drawOval(x + w, y + h / 2, 4, 4);
             }
             if (!(flowable instanceof VirtualInput)) {
                 int numLeft = 3; //TODO GET REAL VALUE (+1)
-                g.drawOval(x, y + h / 2, 2, 2);
+                g.drawOval(x, y + h / 2, 4, 4);
             }
         }
         for (Channel channel : Controller.getInstance().getActiveChannels()) {
