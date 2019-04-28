@@ -20,7 +20,7 @@ public abstract class VirtualDevice<L extends DataLine> implements Serializable,
     protected transient L line;
     protected transient Mixer mixer;
 
-    @Getter @Setter private Dimension position = new Dimension();
+    @Getter @Setter private Rectangle position = new Rectangle();
 
     public VirtualDevice(String name, String mixerName) {
         this.name = name;
