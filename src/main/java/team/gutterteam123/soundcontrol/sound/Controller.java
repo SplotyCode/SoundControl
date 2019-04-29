@@ -2,6 +2,7 @@ package team.gutterteam123.soundcontrol.sound;
 
 import lombok.Getter;
 import lombok.Setter;
+import team.gutterteam123.soundcontrol.SoundControl;
 import team.gutterteam123.soundcontrol.sound.device.Flowable;
 import team.gutterteam123.soundcontrol.sound.device.VirtualDevice;
 import team.gutterteam123.soundcontrol.sound.device.VirtualInput;
@@ -51,7 +52,7 @@ public class Controller {
     private ArrayList<String> outputMixers = new ArrayList<>();
     private ArrayList<String> inputMixers = new ArrayList<>();
 
-    public void hardReload() {
+    public void hardReload(boolean gui) {
         stop();
 
         allFlowables.clear();
@@ -64,6 +65,9 @@ public class Controller {
         activeOutputs.clear();
 
         init();
+        if (gui) {
+            SoundControl.getInstance().getGui().reloadFlow();
+        }
     }
 
     public void init() {

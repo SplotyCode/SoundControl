@@ -1,7 +1,7 @@
 package team.gutterteam123.soundcontrol.gui;
 
 
-import javassist.bytecode.analysis.Frame;
+import lombok.Getter;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -12,8 +12,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.NoSuchElementException;
 
-public class Gui{
+public class Gui extends JFrame {
 
     String separator = System.getProperty("file.separator");
 
@@ -47,16 +48,20 @@ public class Gui{
     TextField textFieldOutput = new TextField();
     TextField textFieldChannel = new TextField();
     Button submitButton = new Button();
-    JFrame frame = new JFrame();
     JSlider slider = new JSlider();
     Font font = new Font("MyFont",Font.BOLD,36);
 
 
+    @Getter private FlowComponent flowComponent = new FlowComponent();
 
 
+    public void reloadFlow() {
+        flowComponent.repaint();
+    }
 
     public void buildGui(int width, int height){
         System.out.println(points.length);
+        Font font = new Font("MyFont",Font.BOLD,36);
         textFieldInput.setFont(font);
         textFieldChannel.setFont(font);
         PopupPanel.add(textFieldInput);
@@ -79,38 +84,39 @@ public class Gui{
         textFieldChannel.setPreferredSize(dimension);
         textFieldInput.setPreferredSize(dimension);
 
-        frame.setSize(width, height);
-        frame.add(button);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setJMenuBar(new SoundMenu());
+        add(flowComponent);
+
+        popupFrame.pack();
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setJMenuBar(new SoundMenu());
 
 
         File imageFile= new File("data" + separator +"Icon.jpg");
         try {
             Image image = ImageIO.read(imageFile);
-            frame.setIconImage(image);
+            setIconImage(image);
             popupFrame.setIconImage(image);
         } catch (IOException e) {
             System.err.println("Image file not found: " + e);
         }
-        frame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        setSize(Toolkit.getDefaultToolkit().getScreenSize());
 
         slider.addChangeListener(changeEvent -> {
         });
         InputButton.addActionListener(e -> {
             String inputText = textFieldInput.getText();
-            frame.repaint();
+            repaint();
         });
 
         ConnectionButton.addActionListener(actionEvent -> {
 
         });
         popupFrame.setSize(700,500);
-        popupFrame.setVisible(true);
-        frame.setTitle("Manage Inputs and Outputs");
+        //popupFrame.setVisible(true);
+        setTitle("Manage Inputs and Outputs");
 
 
-        frame.setVisible(true);
+        setVisible(true);
     }
 
     public void drawLine(Rectangle[] checkingInputs, Rectangle[] checkingChannels, Rectangle[] checkingOutputs) {

@@ -26,7 +26,7 @@ public class Channel implements Flowable {
     @Getter private ArrayList<String> outputNames = new ArrayList<>();
 
 
-    @Getter @Setter private Rectangle position = new Rectangle();
+    @Getter @Setter private Rectangle position = new Rectangle(-1, -1, 100, 100);
 
     private String name;
 
