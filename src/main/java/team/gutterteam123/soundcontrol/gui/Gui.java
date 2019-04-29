@@ -1,18 +1,22 @@
 package team.gutterteam123.soundcontrol.gui;
 
 
+import javassist.bytecode.analysis.Frame;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.IOException;
 
-public class Gui extends Frame {
+public class Gui{
+
     String separator = System.getProperty("file.separator");
+
     Point[] points = new Point[2];
     Rectangle[] rectanglesInput = new Rectangle[1048];
     Rectangle[] rectanglesChannel = new Rectangle[1048];
@@ -21,21 +25,8 @@ public class Gui extends Frame {
     private int screenY = 0;
     private int boxX = 0;
     private int boxY = 0;
-    JFrame popupFrame = new JFrame();
     int deltaX;
     int deltaY;
-    Box button = new Box();
-    Button addConnectionButton = new Button();
-    Button addInputButton = new Button();
-    Button addChannelButton = new Button();
-    Button addOutputButton = new Button();
-    JPanel PopupPanel = new JPanel();
-    TextField textFieldInput = new TextField();
-    TextField textFieldOutput = new TextField();
-    TextField textFieldChannel = new TextField();
-    Button submitButton = new Button();
-    JFrame frame = new JFrame();
-    JSlider slider = new JSlider();
     int inputNumberThatContains;
     int channelNumberThatContains;
     int outputNumberThatContains;
@@ -44,36 +35,56 @@ public class Gui extends Frame {
     boolean Input;
 
 
+    JFrame popupFrame = new JFrame();
+    Box button = new Box();
+    Button MainButton = new Button();
+    JButton InputButton = new JButton();
+    JButton ChannelButton = new JButton();
+    JButton OutputButton = new JButton();
+    JButton ConnectionButton = new JButton();
+    Panel PopupPanel = new Panel();
+    TextField textFieldInput = new TextField();
+    TextField textFieldOutput = new TextField();
+    TextField textFieldChannel = new TextField();
+    Button submitButton = new Button();
+    JFrame frame = new JFrame();
+    JSlider slider = new JSlider();
+    Font font = new Font("MyFont",Font.BOLD,36);
+
+
+
 
 
     public void buildGui(int width, int height){
         System.out.println(points.length);
-        Font font = new Font("MyFont",Font.BOLD,36);
         textFieldInput.setFont(font);
         textFieldChannel.setFont(font);
         PopupPanel.add(textFieldInput);
-        submitButton.setLabel("Submit");
-        addInputButton.setLabel("Add as Input");
-        addChannelButton.setLabel("Add as Channel");
-        addOutputButton.setLabel("Add as Output");
-        addConnectionButton.setLabel("Add Connection");
-        Dimension dimension = new Dimension();
-        dimension.height = 36;
-        dimension.width = 124*2;
-        PopupPanel.add(addInputButton);
-        PopupPanel.add(addChannelButton);
-        PopupPanel.add(addOutputButton);
+        Dimension dimension = new Dimension(36,248);
+
+        InputButton = MainButton.getButton(Button.INPUTBUTTON);
+        ChannelButton = MainButton.getButton(Button.CHANNELBUTTON);
+        OutputButton = MainButton.getButton(Button.OUTPUTBUTTON);
+        ConnectionButton = MainButton.getButton(Button.CONNECTIONBUTTON);
+
+        PopupPanel.add(InputButton);
+        PopupPanel.add(ChannelButton);
+        PopupPanel.add(OutputButton);
+
+        popupFrame.add(PopupPanel);
+        popupFrame.pack();
+        popupFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+
         textFieldChannel.setPreferredSize(dimension);
         textFieldInput.setPreferredSize(dimension);
-        PopupPanel.setVisible(true);
-        popupFrame.add(PopupPanel);
 
+        frame.setSize(width, height);
         frame.add(button);
-
-        popupFrame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setJMenuBar(new SoundMenu());
-        popupFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+
         File imageFile= new File("data" + separator +"Icon.jpg");
         try {
             Image image = ImageIO.read(imageFile);
@@ -86,11 +97,12 @@ public class Gui extends Frame {
 
         slider.addChangeListener(changeEvent -> {
         });
-        addInputButton.addActionListener(e -> {
+        InputButton.addActionListener(e -> {
             String inputText = textFieldInput.getText();
             frame.repaint();
         });
-        addConnectionButton.addActionListener(e -> {
+
+        ConnectionButton.addActionListener(actionEvent -> {
 
         });
         popupFrame.setSize(700,500);

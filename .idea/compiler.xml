@@ -2,10 +2,7 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
-<<<<<<< HEAD
       <profile default="true" name="Default" enabled="true" />
-=======
->>>>>>> origin/master
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -13,11 +10,8 @@
         <module name="SoundControl" />
       </profile>
     </annotationProcessing>
-<<<<<<< HEAD
     <bytecodeTargetLevel>
-      <module name="SoundControl" target="8" />
+      <module name="SoundControl" target="1.8" />
     </bytecodeTargetLevel>
-=======
->>>>>>> origin/master
   </component>
 </project>
