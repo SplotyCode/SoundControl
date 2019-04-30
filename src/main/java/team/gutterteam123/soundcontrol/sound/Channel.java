@@ -15,7 +15,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 @NoArgsConstructor
-public class Channel implements Flowable {
+public class Channel extends Flowable {
 
     public static transient final FileSystem<Channel> FILE_SYSTEM = LinkBase.getInstance().getLink(Links.PARSING_FILEPROVIDER).provide("channel", new SerialisedEntryParser());
 
@@ -25,8 +25,6 @@ public class Channel implements Flowable {
     @Getter private ArrayList<String> inputNames = new ArrayList<>();
     @Getter private ArrayList<String> outputNames = new ArrayList<>();
 
-
-    @Getter @Setter private Rectangle position = new Rectangle(-1, -1, 100, 100);
 
     private String name;
 

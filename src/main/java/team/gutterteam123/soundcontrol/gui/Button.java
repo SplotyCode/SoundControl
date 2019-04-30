@@ -5,15 +5,15 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class Button {
-    JButton button = new JButton();
-    private int start = Toolkit.getDefaultToolkit().getScreenSize().width/2 + 120;
+    private static JButton button = new JButton();
+    private static int start = Toolkit.getDefaultToolkit().getScreenSize().width/2 + 120;
 
     public static final int INPUTBUTTON = 1;
     public static final int CHANNELBUTTON = 2;
     public static final int OUTPUTBUTTON = 3;
     public static final int CONNECTIONBUTTON = 4;
 
-    public JButton getButton(int i){
+    public static JButton getButton(int i){
 
         switch (i){
             case 1:{

@@ -13,14 +13,13 @@ import java.io.Serializable;
 
 @NoArgsConstructor
 @EqualsAndHashCode
-public abstract class VirtualDevice<L extends DataLine> implements Flowable {
+public abstract class VirtualDevice<L extends DataLine> extends Flowable {
 
     protected String mixerName;
     protected String name;
     protected transient L line;
     protected transient Mixer mixer;
 
-    @Getter @Setter private Rectangle position = new Rectangle(-1, -1, 100, 100);
 
     public VirtualDevice(String name, String mixerName) {
         this.name = name;

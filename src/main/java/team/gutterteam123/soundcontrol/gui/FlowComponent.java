@@ -3,6 +3,7 @@ package team.gutterteam123.soundcontrol.gui;
 import team.gutterteam123.soundcontrol.sound.Channel;
 import team.gutterteam123.soundcontrol.sound.Controller;
 import team.gutterteam123.soundcontrol.sound.device.Flowable;
+import team.gutterteam123.soundcontrol.sound.device.VirtualDevice;
 import team.gutterteam123.soundcontrol.sound.device.VirtualInput;
 import team.gutterteam123.soundcontrol.sound.device.VirtualOutput;
 
@@ -75,15 +76,27 @@ public class FlowComponent extends JComponent {
     private static final Color ACCENT = Color.decode("#83e1e4");
     private static final Color BACKGROUND = Color.decode("#202020");
 
+    private long currentID;
+
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
+        currentID++;
         Graphics2D g = (Graphics2D) graphics;
 
         g.setColor(BACKGROUND);
         g.fillRect(0, 0, getWidth(), getHeight());
 
         for (Flowable flowable : Controller.getInstance().getAllFlowables().values()) {
+            if (flowable instanceof Channel) {
+                Channel channel = (Channel) flowable;
+                for (VirtualDevice device : channel.getInputs()) {
+                    device.checkDrawState(currentID);
+                }
+                for (VirtualDevice device : channel.getOutputs()) {
+                    device.checkDrawState(currentID);
+                }
+            }
             int x = flowable.getPosition().x;
             int y = flowable.getPosition().y;
             int w = flowable.getPosition().width;
@@ -110,19 +123,33 @@ public class FlowComponent extends JComponent {
                     y + ((h - g.getFontMetrics().getHeight()) / 2) + g.getFontMetrics().getAscent());
 
             g.setColor(ACCENT);
-
-            /* POINTS */
-            if (!(flowable instanceof VirtualOutput)) {
-                int numRigth = 3; //TODO GET REAL VALUE (+1)
-                g.fillOval(x + w - 4, y + h / 2 - 4, 8, 8);
-            }
-            if (!(flowable instanceof VirtualInput)) {
-                int numLeft = 3; //TODO GET REAL VALUE (+1)
-                g.fillOval(x - 4, y + h / 2 - 4, 8, 8);
-            }
         }
         for (Channel channel : Controller.getInstance().getActiveChannels()) {
-
+            /* POINTS & LINES */
+            int left = channel.getInputs().size() + 1;
+            int rigth = channel.getOutputs().size() + 1;
+            for (int i = 1 ; i < left + 1; i++) {
+                int pointY = channel.getPosition().y + channel.getPosition().height / left * i / 2  - 4;
+                g.fillOval(channel.getPosition().x - 4, pointY,8, 8);
+                int i2 = 0;
+                for (VirtualInput input : channel.getInputs()) {
+                    int inY = input.getPosition().y + input.getPosition().height / input.getConections() * i2 / 2  + 4;
+                    g.fillOval(channel.getPosition().x + channel.getPosition().width + 4, pointY,8, 8);
+                    g.drawLine(channel.getPosition().x + channel.getPosition().width + 4, inY, channel.getPosition().x - 4, pointY);
+                    i2++;
+                }
+            }
+            for (int i = 1 ; i < rigth + 1; i++) {
+                int pointY = channel.getPosition().y + channel.getPosition().height / left * i / 2  - 4;
+                g.fillOval(channel.getPosition().x + channel.getPosition().width + 4, pointY,8, 8);
+                int i2 = 0;
+                for (VirtualInput input : channel.getInputs()) {
+                    int inY = input.getPosition().y + input.getPosition().height / input.getConections() * i2 / 2  + 4;
+                    g.fillOval(channel.getPosition().x - 4, pointY,8, 8);
+                    g.drawLine(channel.getPosition().x - 4, inY, channel.getPosition().x - 4, pointY);
+                    i2++;
+                }
+            }
         }
     }
 

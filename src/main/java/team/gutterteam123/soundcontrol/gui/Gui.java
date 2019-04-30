@@ -38,7 +38,7 @@ public class Gui extends JFrame {
 
     JFrame popupFrame = new JFrame();
     Box button = new Box();
-    Button MainButton = new Button();
+
     JButton InputButton = new JButton();
     JButton ChannelButton = new JButton();
     JButton OutputButton = new JButton();
@@ -67,10 +67,10 @@ public class Gui extends JFrame {
         PopupPanel.add(textFieldInput);
         Dimension dimension = new Dimension(36,248);
 
-        InputButton = MainButton.getButton(Button.INPUTBUTTON);
-        ChannelButton = MainButton.getButton(Button.CHANNELBUTTON);
-        OutputButton = MainButton.getButton(Button.OUTPUTBUTTON);
-        ConnectionButton = MainButton.getButton(Button.CONNECTIONBUTTON);
+        InputButton = Button.getButton(Button.INPUTBUTTON);
+        ChannelButton = Button.getButton(Button.CHANNELBUTTON);
+        OutputButton = Button.getButton(Button.OUTPUTBUTTON);
+        ConnectionButton = Button.getButton(Button.CONNECTIONBUTTON);
 
         PopupPanel.add(InputButton);
         PopupPanel.add(ChannelButton);
