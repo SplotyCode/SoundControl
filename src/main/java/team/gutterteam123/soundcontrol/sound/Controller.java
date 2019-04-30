@@ -94,6 +94,7 @@ public class Controller {
             allFlowables.put(output.name(), output);
         }
         for (Channel channel : Channel.FILE_SYSTEM.getEntries()) {
+            channel.ioLists();
             activeChannels.add(channel);
             allFlowables.put(channel.name(), channel);
             for (String rawInput : channel.getInputNames()) {
@@ -157,7 +158,7 @@ public class Controller {
         return null;
     }
 
-    private void updateMixers() {
+    public void updateMixers() {
         outputMixers.clear();
         inputMixers.clear();
         for (Mixer.Info info : AudioSystem.getMixerInfo()) {

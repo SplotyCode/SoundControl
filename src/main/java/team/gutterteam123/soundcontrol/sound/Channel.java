@@ -19,8 +19,13 @@ public class Channel extends Flowable {
 
     public static transient final FileSystem<Channel> FILE_SYSTEM = LinkBase.getInstance().getLink(Links.PARSING_FILEPROVIDER).provide("channel", new SerialisedEntryParser());
 
-    @Getter private transient ArrayList<VirtualInput> inputs = new ArrayList<>();
-    @Getter private transient ArrayList<VirtualOutput> outputs = new ArrayList<>();
+    @Getter private transient ArrayList<VirtualInput> inputs;
+    @Getter private transient ArrayList<VirtualOutput> outputs;
+
+    public void ioLists() {
+        inputs = new ArrayList<>();
+        outputs = new ArrayList<>();
+    }
 
     @Getter private ArrayList<String> inputNames = new ArrayList<>();
     @Getter private ArrayList<String> outputNames = new ArrayList<>();

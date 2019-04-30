@@ -8,28 +8,20 @@ import java.io.Serializable;
 
 public abstract class Flowable implements Serializable {
 
+    @Getter @Setter private Rectangle position = new Rectangle(-1, -1, 100, 100);
+
+    @Getter @Setter private transient long drawId;
+
+    @Getter @Setter private transient int connections;
+
     public abstract String name();
-
-    @Getter
-    @Setter
-    private transient long drawId;
-
-    @Getter
-    @Setter
-    private transient int conections;
 
     public void checkDrawState(long drawId) {
         if (this.drawId != drawId) {
             this.drawId = drawId;
-            conections = 0;
+            connections = 0;
         }
-        conections++;
+        connections++;
     }
-
-
-    @Getter
-    @Setter
-    private Rectangle position = new Rectangle(-1, -1, 100, 100);
-
 
 }

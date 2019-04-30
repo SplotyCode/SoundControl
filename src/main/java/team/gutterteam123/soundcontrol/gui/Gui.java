@@ -2,6 +2,7 @@ package team.gutterteam123.soundcontrol.gui;
 
 
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -35,7 +36,6 @@ public class Gui extends JFrame {
     int needed;
     boolean Input;
 
-
     JFrame popupFrame = new JFrame();
     Box button = new Box();
 
@@ -53,6 +53,8 @@ public class Gui extends JFrame {
 
 
     @Getter private FlowComponent flowComponent = new FlowComponent();
+    @Getter private OptionComponent optionComponent = new OptionComponent();
+    @Setter @Getter private boolean inFlow = true;
 
 
     public void reloadFlow() {
@@ -88,7 +90,7 @@ public class Gui extends JFrame {
 
         popupFrame.pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setJMenuBar(new SoundMenu());
+        setJMenuBar(new SoundMenu(this));
 
 
         File imageFile= new File("data" + separator +"Icon.jpg");
@@ -113,8 +115,7 @@ public class Gui extends JFrame {
         });
         popupFrame.setSize(700,500);
         //popupFrame.setVisible(true);
-        setTitle("Manage Inputs and Outputs");
-
+        setTitle("SoundControl");
 
         setVisible(true);
     }

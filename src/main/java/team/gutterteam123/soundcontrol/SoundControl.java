@@ -5,6 +5,7 @@ import io.github.splotycode.mosaik.runtime.application.Application;
 import io.github.splotycode.mosaik.runtime.startup.BootContext;
 import lombok.Getter;
 import team.gutterteam123.soundcontrol.gui.Gui;
+import team.gutterteam123.soundcontrol.settings.SettingsManager;
 import team.gutterteam123.soundcontrol.sound.Channel;
 import team.gutterteam123.soundcontrol.sound.Controller;
 import team.gutterteam123.soundcontrol.sound.device.VirtualInput;
@@ -19,6 +20,7 @@ public class SoundControl extends Application {
 
     @Getter private Controller controller = new Controller();
     @Getter private Gui gui = new Gui();
+    @Getter private SettingsManager settingsManager = new SettingsManager();
 
     public static void main(String[] args) throws Exception {
         new SoundControl().start(null);

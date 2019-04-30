@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.swing.*;
 import java.awt.*;
 
+//TODO https://stackoverflow.com/a/19864657/8738512
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class GuiUtil {
 

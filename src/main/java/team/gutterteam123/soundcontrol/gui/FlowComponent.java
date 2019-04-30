@@ -1,11 +1,11 @@
 package team.gutterteam123.soundcontrol.gui;
 
+import team.gutterteam123.soundcontrol.settings.FlowableSetting;
 import team.gutterteam123.soundcontrol.sound.Channel;
 import team.gutterteam123.soundcontrol.sound.Controller;
 import team.gutterteam123.soundcontrol.sound.device.Flowable;
 import team.gutterteam123.soundcontrol.sound.device.VirtualDevice;
 import team.gutterteam123.soundcontrol.sound.device.VirtualInput;
-import team.gutterteam123.soundcontrol.sound.device.VirtualOutput;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +28,9 @@ public class FlowComponent extends JComponent {
             @Override
             public void mousePressed(MouseEvent event) {
                 drag = getFlowabl(event.getPoint());
-                System.out.println("set " + drag);
+                if (event.getClickCount() == 2 && drag != null) {
+                    new FlowableSetting(drag);
+                }
             }
         });
         addMouseMotionListener(new MouseMotionAdapter() {
@@ -52,7 +54,6 @@ public class FlowComponent extends JComponent {
 
     public void positionFlowable(Flowable flowable) {
         while (!validPos(flowable)) {
-            System.out.println("new position");
             //max is -1
             flowable.getPosition().setLocation(ThreadLocalRandom.current().nextInt(10, getWidth() - 11),
                                                ThreadLocalRandom.current().nextInt(10, getHeight() - 11));
@@ -121,11 +122,11 @@ public class FlowComponent extends JComponent {
             g.drawString(flowable.name(),
                     x + (w - g.getFontMetrics().stringWidth(flowable.name())) / 2,
                     y + ((h - g.getFontMetrics().getHeight()) / 2) + g.getFontMetrics().getAscent());
-
-            g.setColor(ACCENT);
         }
         for (Channel channel : Controller.getInstance().getActiveChannels()) {
             /* POINTS & LINES */
+            g.setColor(ACCENT);
+
             int left = channel.getInputs().size() + 1;
             int rigth = channel.getOutputs().size() + 1;
             for (int i = 1 ; i < left + 1; i++) {
@@ -133,21 +134,32 @@ public class FlowComponent extends JComponent {
                 g.fillOval(channel.getPosition().x - 4, pointY,8, 8);
                 int i2 = 0;
                 for (VirtualInput input : channel.getInputs()) {
-                    int inY = input.getPosition().y + input.getPosition().height / input.getConections() * i2 / 2  + 4;
-                    g.fillOval(channel.getPosition().x + channel.getPosition().width + 4, pointY,8, 8);
-                    g.drawLine(channel.getPosition().x + channel.getPosition().width + 4, inY, channel.getPosition().x - 4, pointY);
+                    int inY = input.getPosition().y + input.getPosition().height / input.getConnections() * i2 / 2  + 4;
+                    g.fillOval(channel.getPosition().x + channel.getPosition().width - 4, pointY,8, 8);
+                    g.drawLine(channel.getPosition().x + channel.getPosition().width - 4, inY, channel.getPosition().x - 4, pointY);
                     i2++;
                 }
             }
             for (int i = 1 ; i < rigth + 1; i++) {
                 int pointY = channel.getPosition().y + channel.getPosition().height / left * i / 2  - 4;
-                g.fillOval(channel.getPosition().x + channel.getPosition().width + 4, pointY,8, 8);
+                g.fillOval(channel.getPosition().x + channel.getPosition().width - 4, pointY,8, 8);
                 int i2 = 0;
                 for (VirtualInput input : channel.getInputs()) {
-                    int inY = input.getPosition().y + input.getPosition().height / input.getConections() * i2 / 2  + 4;
+                    int inY = input.getPosition().y + input.getPosition().height / input.getConnections() * i2 / 2  + 4;
                     g.fillOval(channel.getPosition().x - 4, pointY,8, 8);
                     g.drawLine(channel.getPosition().x - 4, inY, channel.getPosition().x - 4, pointY);
                     i2++;
+                }
+            }
+        }
+        g.setColor(ACCENT);
+        for (Flowable flowable : Controller.getInstance().getAllFlowables().values()) {
+            if (!(flowable instanceof Channel) && flowable.getConnections() == 0) {
+                Rectangle rec = flowable.getPosition();
+                if (flowable instanceof VirtualInput) {
+                    g.fillOval(rec.x - 4, rec.y + rec.height / 2 - 4,8, 8);
+                } else {
+                    g.fillOval(rec.x + rec.width - 4, rec.y + rec.height / 2 - 4,8, 8);
                 }
             }
         }
@@ -155,7 +167,6 @@ public class FlowComponent extends JComponent {
 
     public Flowable getFlowabl(Point point) {
         for (Flowable flowable : Controller.getInstance().getAllFlowables().values()) {
-            System.out.println(flowable.getPosition() + " " + point);
             if (flowable.getPosition().contains(point)) {
                 return flowable;
             }

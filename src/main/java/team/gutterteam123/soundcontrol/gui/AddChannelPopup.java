@@ -32,7 +32,7 @@ public class AddChannelPopup {
 
         int result = GuiUtil.showInput(SoundControl.getInstance().getGui(), title, other);
         if (result == JOptionPane.YES_OPTION) {
-            if (!StringUtil.isEmpty(name.getText())) {
+            if (!StringUtil.isEmpty(name.getText()) && !Controller.getInstance().getAllFlowables().containsKey(name.getText())) {
                 Flowable flowable = newFlowable();
                 if (flowable == null) {
                     reopen();
