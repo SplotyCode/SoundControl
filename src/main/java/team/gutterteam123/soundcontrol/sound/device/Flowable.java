@@ -24,4 +24,8 @@ public abstract class Flowable implements Serializable {
         connections++;
     }
 
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + ": " + name();
+    }
 }

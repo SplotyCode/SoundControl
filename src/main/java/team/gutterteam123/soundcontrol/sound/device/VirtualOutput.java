@@ -29,6 +29,14 @@ public class VirtualOutput extends VirtualDevice<SourceDataLine> {
     @Setter private float volume = 1;
     @Getter private boolean fairSplit;
 
+    public void reset() {
+        if (channels == null) {
+            channels = new ArrayList<>();
+        } else {
+            channels.clear();
+        }
+    }
+
     public VirtualOutput(String name, String mixerName) {
         super(name, mixerName);
     }

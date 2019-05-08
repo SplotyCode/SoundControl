@@ -90,6 +90,7 @@ public class Controller {
             allFlowables.put(input.name(), input);
         }
         for (VirtualOutput output : VirtualOutput.FILE_SYSTEM.getEntries()) {
+            output.reset();
             allOutputs.put(output.name(), output);
             allFlowables.put(output.name(), output);
         }
